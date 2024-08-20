@@ -18,7 +18,7 @@ Using NextJS 14 and Radix UI (alongside Tailwind CSS), you will be implementing 
 1. Badges Section
 2. Last Activities Section
 
-You can find the [figma reference here](https://www.figma.com/design/8ZSGcdV5SUpgqY8EfeMasn/Test-Task---Absinthe?node-id=84-566&m=dev&t=SuZxx4NMKMTmrJhC-1).
+You can [download the figma file here](test-task-absinthe.fig)
 Once you get to the file, you should request access from us which will automatically grant you 3 days of figma-dev access to the file.
 
 ![image](task.png)
