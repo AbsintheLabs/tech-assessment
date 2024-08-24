@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar/Navbar";
+import ApolloProviderWrapper from "@/components/ApolloProviderWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,14 +22,11 @@ export default function RootLayout({
       <body className={`${inter.className} flex flex-col h-full w-full`}>
         <>
           <Navbar />
-          <main className="flex-grow w-full">{children}</main>
+          <ApolloProviderWrapper>
+            <main className="flex-grow w-full">{children}</main>
+          </ApolloProviderWrapper>
           <Footer />
         </>
-        {/* {didMount ? (
-          <><Navbar /><main className="flex-grow w-full">
-            {children}
-          </main><Footer /></>
-        ) : (<div className="root__loading">Loading</div>)} */}
       </body>
     </html>
   );
