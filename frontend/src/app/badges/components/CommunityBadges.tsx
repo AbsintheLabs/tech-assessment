@@ -1,16 +1,22 @@
+import { Badge } from "@/components/Badge";
 import React from "react";
 
 const CommunityBadges = () => {
   return (
-    <div className="bg-elevation-2-dark p-4 rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold">Community Badges</h3>
-      <div className="flex overflow-x-auto space-x-4 mt-4">
-        {/* Map through community badges */}
+    <div className="bg-elevation-1-dark rounded-lg shadow-md">
+      <div className="bg-elevation-2-dark p-2 rounded-t-lg border-b-elevation-background-dark">
+        <p className="text-sm text-text-primary-dark ">Community Badges</p>
+      </div>
+      <div className="flex overflow-x-auto space-x-4 mt-4 custom-scrollbar">
         {communityBadges.map((badge, index) => (
-          <div key={index} className="flex flex-col items-center space-y-2">
-            <img src={badge.icon} alt={badge.name} className="w-16 h-16" />
-            <span className="text-xs">{badge.name}</span>
-            <span className="text-sm">{badge.description}</span>
+          <div key={index} className="flex-shrink-0 mb-1">
+            <Badge
+              title={badge.name}
+              actions={badge.actions}
+              icon={badge.icon}
+              multiplier={badge.multiplier}
+              isSelected={badge.isSelected}
+            />
           </div>
         ))}
       </div>
@@ -19,13 +25,55 @@ const CommunityBadges = () => {
 };
 
 const communityBadges = [
-  { name: "Discord OG", icon: "/icons/discord-og.svg", description: "1.15x" },
+  {
+    name: "Discord OG",
+    icon: "/images/badge.svg",
+    actions: 3,
+    multiplier: "1.15x",
+    isSelected: true,
+  },
+  {
+    name: "Liquidity Machine",
+    icon: "/images/badge.svg",
+    actions: 3,
+    multiplier: "1.15x",
+    isSelected: false,
+  },
   {
     name: "Income Engineer",
-    icon: "/icons/income-engineer.svg",
-    description: "2x",
+    icon: "/images/badge.svg",
+    actions: 3,
+    multiplier: "2x",
+    isSelected: false,
   },
-  // Add more badges as needed
+  {
+    name: "Pudgy OG",
+    icon: "/images/badge.svg",
+    actions: 3,
+    multiplier: "200 Points",
+    isSelected: false,
+  },
+  {
+    name: "Pathfinder OG",
+    icon: "/images/badge.svg",
+    actions: 3,
+    multiplier: "1.15x",
+    isSelected: false,
+  },
+  {
+    name: "Rookie Badge",
+    icon: "/images/badge.svg",
+    actions: 1,
+    multiplier: "150 Points",
+    isSelected: false,
+  },
+  {
+    name: "Check Badge",
+    icon: "/images/badge.svg",
+    actions: 1,
+    multiplier: "100 Points",
+    isSelected: false,
+  },
 ];
 
 export default CommunityBadges;

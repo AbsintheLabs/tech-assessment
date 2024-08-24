@@ -24,10 +24,6 @@ export const Navbar = ({ className }: NavbarProps) => {
       )}
     >
       <div className="container mx-auto flex items-center justify-between p-4">
-        {/* Logo and Hamburger Icon */}
-        {/* <div className="flex items-center space-x-4">
-                  
-                </div> */}
         <Logo />
 
         {/* Desktop Navigation */}

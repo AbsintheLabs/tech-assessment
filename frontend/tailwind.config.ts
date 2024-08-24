@@ -73,7 +73,7 @@ const config: Config = {
               light: '#28A745',
             },
             elevation1: {
-              dark: '#27D17F10',  // 10% opacity
+              dark: 'rgba(39, 209, 127, 0.1)',  // 10% opacity
               light: '#3E8F77',
             },
             elevation2: {
