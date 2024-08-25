@@ -5,6 +5,8 @@ import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar/Navbar";
 import ApolloProviderWrapper from "@/components/ApolloProviderWrapper";
 
+import "@radix-ui/themes/styles.css";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
