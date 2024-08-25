@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@apollo/client";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
@@ -32,6 +32,22 @@ export const LastActivitiesTable: React.FC = () => {
   const [activities, setActivities] = useState<any[]>([]); // State to store activities
   const [lastFetchedBlock, setLastFetchedBlock] = useState<any>(null);
 
+  // useCallback for adding new data to activities
+  const addNewData = useCallback(
+    (newLogs: any[]) => {
+      setActivities((prevActivities) => {
+        const filteredLogs = newLogs.filter(
+          (log) =>
+            !prevActivities.some(
+              (act) => act.transaction_hash === log.transaction_hash,
+            ),
+        );
+        return [...filteredLogs, ...prevActivities];
+      });
+    },
+    [setActivities],
+  );
+
   const { data, loading, error, startPolling, stopPolling } = useQuery<
     FetchLogsData,
     FetchLogsVars
@@ -46,9 +62,7 @@ export const LastActivitiesTable: React.FC = () => {
           ...data.logs.map((log) => parseFloat(log.block_number.toString())),
         );
         setLastFetchedBlock(maxBlockNumber);
-
-        setActivities((prevActivities) => [...data.logs, ...prevActivities]);
-        console.log("New added data:", data.logs);
+        addNewData(data.logs); // Use the useCallback function to add new data
       }
     },
   });
@@ -60,7 +74,7 @@ export const LastActivitiesTable: React.FC = () => {
     };
   }, [startPolling, stopPolling]);
 
-  const handleCopyClick = (txId: string) => {
+  const handleCopyClick = useCallback((txId: string) => {
     navigator.clipboard
       .writeText(txId)
       .then(() => {
@@ -72,7 +86,7 @@ export const LastActivitiesTable: React.FC = () => {
       .catch((err) => {
         console.error("Failed to copy:", err);
       });
-  };
+  }, []);
 
   if (loading && !data)
     return (
@@ -101,8 +115,8 @@ export const LastActivitiesTable: React.FC = () => {
   }
 
   return (
-    <div className="bg-elevation-background-dark rounded-lg shadow-md max-h-[400px]">
-      <div className="overflow-x-auto custom-scrollbar max-h-[400px]">
+    <div className="bg-elevation-background-dark rounded-lg shadow-md max-h-[300px]">
+      <div className="overflow-x-auto custom-scrollbar max-h-[300px]">
         <table className="w-full text-left rounded-lg min-w-[600px]">
           <thead className="sticky top-0 bg-elevation-3-dark">
             <tr>
@@ -119,14 +133,17 @@ export const LastActivitiesTable: React.FC = () => {
           <tbody>
             {activities.map((activity, index) => (
               <tr
-                key={index}
+                key={activity.transaction_hash} // Unique key
                 className={clsx(
                   "odd:bg-elevation-1-dark even:bg-elevation-2-dark hover:bg-brands-primary-dark transition-colors duration-200 text-text-primary-dark",
+                  "new-row-animation", // Apply animation class
                   index === activities.length - 1 ? "rounded-b-lg" : "",
                 )}
               >
                 <td className="px-4 py-2 flex items-center font-normal">
-                  {TransactionIcon(activity.icon)}
+                  {TransactionIcon(
+                    index % 2 === 0 ? "tx-icon.svg" : "bridged-icon.svg",
+                  )}
                   <span className="ml-2 text-sm font-normal">
                     {activity.type}
                   </span>
@@ -148,7 +165,7 @@ export const LastActivitiesTable: React.FC = () => {
                 </td>
                 <td className="px-4 py-2 flex items-center w-full justify-between">
                   <div className="flex items-center">
-                    <span className="text-text-secondary-dark text-sm font-normal">
+                    <span className="text-text-secondary-dark text-sm font-normal w-[100px]">
                       {formatTxId(activity.transaction_hash)}
                     </span>
                     <button
@@ -159,7 +176,7 @@ export const LastActivitiesTable: React.FC = () => {
                     </button>
                   </div>
                   <button className="ml-2 p-1">
-                    <ExternalLinkIcon className="text-gray-400 hover:text-text-primary-dark" />
+                    <ExternalLinkIcon className="text-text-secondary-dark hover:text-text-primary-dark" />
                   </button>
                 </td>
               </tr>
