@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-interface BadgeProps {
+interface BadgeCardProps {
   title: string;
   actions: number;
   icon: string;
@@ -11,9 +11,10 @@ interface BadgeProps {
   isSelected?: boolean;
   onClick?: () => void;
   loading?: boolean;
+  showBorder?: boolean;
 }
 
-export const Badge = ({
+export const BadgeCard = ({
   title,
   actions,
   icon,
@@ -22,19 +23,24 @@ export const Badge = ({
   showDetails = false,
   onClick,
   loading = false,
+  showBorder = false,
   details, // Include the details prop
-}: BadgeProps) => {
+}: BadgeCardProps) => {
   return (
     <div className="w-full h-full">
       <div
         onClick={onClick}
         className={clsx(
           "relative flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all duration-300",
+          // {
+          //   "border-2 border-green-500": isSelected,
+          //   "border-transparent": !isSelected,
+          // },
           {
-            "border-2 border-green-500": isSelected,
-            "border-transparent": !isSelected,
+            "border-2 border-states-success-main-dark": showBorder,
+            "border-transparent": !showBorder,
           },
-          "hover:border-green-500",
+          "hover:border-states-success-main-dark",
           "bg-elevation-3-dark w-[12rem] h-[12rem]",
         )}
       >
@@ -69,7 +75,7 @@ export const Badge = ({
       </div>
 
       {showDetails && details && (
-        <div className="relative w-full bg-elevation-2-dark rounded-lg shadow-lg mt-2 p-2 text-center text-text-primary-dark">
+        <div className="relative w-[12rem] bg-elevation-2-dark rounded-lg shadow-lg mt-2 p-2 text-center text-text-primary-dark">
           <p className="text-sm text-text-primary-dark">{"Reward Details"}</p>
           <p className="text-sm text-text-secondary-dark">{details}</p>
         </div>

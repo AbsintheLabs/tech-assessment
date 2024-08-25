@@ -27,7 +27,7 @@ const TransactionIcon = (iconName: string) => (
   />
 );
 
-export const LastActivitiesTable: React.FC = () => {
+export const LastActivitiesTable = () => {
   const [copied, setCopied] = useState<string | null>(null);
   const [activities, setActivities] = useState<any[]>([]); // State to store activities
   const [lastFetchedBlock, setLastFetchedBlock] = useState<any>(null);
