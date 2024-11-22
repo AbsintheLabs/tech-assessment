@@ -93,7 +93,7 @@ export const LastActivitiesTable = () => {
   }, [appendNewRows]);
 
   useEffect(() => {
-    const interval = setInterval(fetchMockData, 2000); // Poll every 2 seconds
+    const interval = setInterval(fetchMockData, 5000); // Poll every 2 seconds
     return () => clearInterval(interval); // Cleanup on component unmount
   }, [fetchMockData]);
 

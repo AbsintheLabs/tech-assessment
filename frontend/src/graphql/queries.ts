@@ -46,7 +46,7 @@ export function getMockGraphQlData() {
   const randomTxId = () => Math.random().toString(36).substring(2, 15);
   const randomAmount = () => (Math.random() * 100).toFixed(2);
 
-  return Array.from({ length: 10 }, (_, index) => ({
+  return Array.from({ length: 5 }, (_, index) => ({
     transaction_hash: randomTxId(),
     decoded: {
       amount0In: randomAmount(),
