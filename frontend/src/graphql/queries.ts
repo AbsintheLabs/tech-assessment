@@ -41,3 +41,19 @@ export interface FetchLogsData {
 export interface FetchLogsVars {
   lastFetchedBlock: any; // Use `any` to bypass the type issue
 }
+
+export function getMockGraphQlData() {
+  const randomTxId = () => Math.random().toString(36).substring(2, 15);
+  const randomAmount = () => (Math.random() * 100).toFixed(2);
+
+  return Array.from({ length: 10 }, (_, index) => ({
+    transaction_hash: randomTxId(),
+    decoded: {
+      amount0In: randomAmount(),
+    },
+    address: `0x${randomTxId()}`,
+    block_number: index + 1,
+    block_timestamp: new Date(Date.now() - index * 60000).toISOString(),
+    type: index % 2 === 0 ? "Transfer" : "Swap",
+  }));
+}

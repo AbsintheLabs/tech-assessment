@@ -5,7 +5,12 @@ import { useQuery } from "@apollo/client";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import Image from "next/image";
-import { FETCH_LOGS, FetchLogsData, FetchLogsVars } from "@/graphql/queries";
+import {
+  FETCH_LOGS,
+  FetchLogsData,
+  FetchLogsVars,
+  getMockGraphQlData,
+} from "@/graphql/queries";
 import { Spinner } from "@radix-ui/themes";
 
 function formatTxId(txId: string): string {
@@ -48,31 +53,59 @@ export const LastActivitiesTable = () => {
     [setActivities],
   );
 
-  const { data, loading, error, startPolling, stopPolling } = useQuery<
-    FetchLogsData,
-    FetchLogsVars
-  >(FETCH_LOGS, {
-    variables: {
-      lastFetchedBlock: lastFetchedBlock !== null ? lastFetchedBlock : "0",
-    },
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (data) => {
-      if (data.logs.length > 0) {
-        const maxBlockNumber = Math.max(
-          ...data.logs.map((log) => parseFloat(log.block_number.toString())),
-        );
-        setLastFetchedBlock(maxBlockNumber);
-        addNewData(data.logs); // Use the useCallback function to add new data
-      }
-    },
-  });
+  // Mock new data fetch on polling
+  const fetchMockData = useCallback(() => {
+    const newLogs = getMockGraphQlData(); // Generate new mock logs
+    setActivities((prevActivities) => {
+      const filteredLogs = newLogs.filter(
+        (log) =>
+          !prevActivities.some(
+            (act) => act.transaction_hash === log.transaction_hash,
+          ),
+      );
+      return [...filteredLogs, ...prevActivities];
+    });
+
+    // Update the last fetched block
+    if (newLogs.length > 0) {
+      const maxBlockNumber = Math.max(
+        ...newLogs.map((log) => log.block_number),
+      );
+      setLastFetchedBlock(maxBlockNumber);
+    }
+  }, []);
 
   useEffect(() => {
-    startPolling(2000); // Start polling every 2 seconds
-    return () => {
-      stopPolling(); // Stop polling when the component unmounts
-    };
-  }, [startPolling, stopPolling]);
+    const interval = setInterval(fetchMockData, 2000); // Poll every 2 seconds with mock data
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, [fetchMockData]);
+
+  // const { data, loading, error, startPolling, stopPolling } = useQuery<
+  //   FetchLogsData,
+  //   FetchLogsVars
+  // >(FETCH_LOGS, {
+  //   variables: {
+  //     lastFetchedBlock: lastFetchedBlock !== null ? lastFetchedBlock : "0",
+  //   },
+  //   notifyOnNetworkStatusChange: true,
+  //   onCompleted: (data) => {
+  //     if (data.logs.length > 0) {
+  //       const maxBlockNumber = Math.max(
+  //         ...data.logs.map((log) => parseFloat(log.block_number.toString())),
+  //       );
+  //       setLastFetchedBlock(maxBlockNumber);
+  //       addNewData(data.logs); // Use the useCallback function to add new data
+  //     }
+  //   },
+  // });
+
+  // Commented to use mock data for demonstration purposes
+  // useEffect(() => {
+  //   startPolling(2000); // Start polling every 2 seconds
+  //   return () => {
+  //     stopPolling(); // Stop polling when the component unmounts
+  //   };
+  // }, [startPolling, stopPolling]);
 
   const handleCopyClick = useCallback((txId: string) => {
     navigator.clipboard
@@ -88,15 +121,15 @@ export const LastActivitiesTable = () => {
       });
   }, []);
 
-  if (loading && !data)
-    return (
-      <div className="text-center text-text-secondary-dark">
-        <Spinner size={"3"} className="w-200 h-200 bg-red-500" />
-        Loading ...
-      </div>
-    );
+  // if (loading && !data)
+  //   return (
+  //     <div className="text-center text-text-secondary-dark">
+  //       <Spinner size={"3"} className="w-200 h-200 bg-red-500" />
+  //       Loading ...
+  //     </div>
+  //   );
 
-  if (error) return <p>Error: {error.message}</p>;
+  // if (error) return <p>Error: {error.message}</p>;
 
   function formatDate(date: Date): string {
     const day = String(date.getDate()).padStart(2, "0");
